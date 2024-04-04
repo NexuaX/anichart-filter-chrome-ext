@@ -1,0 +1,17 @@
+{
+    "name": "anichart filter",
+    "description": "anichart filter",
+    "version": "0.1",
+    "manifest_version": 3,
+
+    "permissions": ["activeTab", "scripting"],
+
+    "content_scripts": [
+        {
+            "matches": ["https://anichart.net/*"],
+            "run_at": "document_idle",
+            "js": ["js/filter-handler.js"],
+            "css": ["css/filter-box.css"]
+        }
+    ]
+  }

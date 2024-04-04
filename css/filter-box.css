@@ -1,0 +1,16 @@
+#filter-selector {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+}
+
+/* .section {
+    position: static !important;
+}
+
+.mugen-scroll {
+    bottom: unset !important;
+    top: 0 !important;
+    height: 100vh !important;
+} */
