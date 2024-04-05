@@ -13,7 +13,7 @@ console.log("Filter by watch status script started.");
 
     const option_watching = document.createElement("option")
     option_watching.value = "green"
-    option_watching.innerText = "watching"
+    option_watching.innerText = "watch"
 
     const option_maybe = document.createElement("option")
     option_maybe.value = "yellow"

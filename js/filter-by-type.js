@@ -12,16 +12,16 @@ console.log("Filter by type status script started.");
     option_all.innerText = "all"
     
     const option_tv = document.createElement("option")
-    option_tv.value = "tv\nshare"
+    option_tv.value = "tv\n\t\t\t\tshare"
     option_tv.innerText = "tv"
     
     const option_tvshort = document.createElement("option")
     option_tvshort.value = "tv short"
-    option_tvshort.innerText = "tvshort"
+    option_tvshort.innerText = "short"
     
     const option_leftovers = document.createElement("option")
     option_leftovers.value = "leftovers"
-    option_leftovers.innerText = "leftovers"
+    option_leftovers.innerText = "left"
     
     const option_movie = document.createElement("option")
     option_movie.value = "movie"
@@ -51,7 +51,8 @@ console.log("Filter by type status script started.");
         } else {
             all_items.forEach(elem => {
                 let temp = elem.querySelector(".section-heading")
-                if (temp.innerText.toLowerCase().indexOf(filter_value) == -1) {
+                console.log(temp.textContent.toLowerCase());
+                if (temp.textContent.toLowerCase().indexOf(filter_value) == -1) {
                     elem.style.display = "none"
                 } else {
                     elem.style.display = ""
