@@ -1,7 +1,7 @@
 {
     "name": "anichart filter",
     "description": "anichart filter",
-    "version": "0.1",
+    "version": "0.2",
     "manifest_version": 3,
 
     "permissions": ["activeTab", "scripting"],
@@ -10,7 +10,7 @@
         {
             "matches": ["https://anichart.net/*"],
             "run_at": "document_idle",
-            "js": ["js/filter-handler.js"],
+            "js": ["js/filter-by-watch.js", "js/filter-by-type.js", "js/switch-seasons.js"],
             "css": ["css/filter-box.css"]
         }
     ]

@@ -1,6 +1,20 @@
-#filter-selector {
+#filter-by-watch-selector {
     position: fixed;
     top: 0;
+    left: 0;
+    z-index: 99;
+}
+
+#filter-by-type-selector {
+    position: fixed;
+    top: 19px;
+    left: 0;
+    z-index: 99;
+}
+
+#seasons-selector {
+    position: fixed;
+    top: 38px;
     left: 0;
     z-index: 99;
 }
