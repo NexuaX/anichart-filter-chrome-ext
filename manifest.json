@@ -10,7 +10,7 @@
         {
             "matches": ["https://anichart.net/*"],
             "run_at": "document_idle",
-            "js": ["js/filter-by-watch.js", "js/filter-by-type.js", "js/switch-seasons.js"],
+            "js": ["js/filter-by-watch.js", "js/filter-by-type.js", "js/switch-seasons.js", "js/up-arrow.js"],
             "css": ["css/filter-box.css"]
         }
     ]

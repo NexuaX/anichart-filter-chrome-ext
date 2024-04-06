@@ -25,6 +25,16 @@
     width: 150px;
 }
 
-#seasons-selector::-webkit-scrollbar{
+#seasons-selector::-webkit-scrollbar {
     display: none;
+}
+
+#up-scroll-arrow {
+    position: fixed;
+    bottom: 5px;
+    right: 15px;
+    z-index: 99;
+    font-size: 5rem;
+    font-weight: bold;
+    cursor: pointer;
 }
