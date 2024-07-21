@@ -4,6 +4,7 @@
     left: 5px;
     z-index: 99;
     font-size: 1.5rem;
+    height: 95px;
     width: 75px;
 }
 
@@ -13,12 +14,13 @@
     left: 80px;
     z-index: 99;
     font-size: 1.5rem;
+    height: 95px;
     width: 75px;
 }
 
 #seasons-selector {
     position: fixed;
-    top: calc(19px + 2px + 5px);
+    top: calc(93px + 2px + 5px);
     left: 5px;
     z-index: 99;
     font-size: 1.5rem;

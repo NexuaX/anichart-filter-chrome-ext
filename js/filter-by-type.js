@@ -6,10 +6,11 @@ console.log("Filter by type status script started.");
 
     const selector = document.createElement("select")
     selector.id = "filter-by-type-selector"
+    selector.toggleAttribute("multiple", true)
     
-    const option_all = document.createElement("option")
-    option_all.value = "all"
-    option_all.innerText = "all"
+    // const option_all = document.createElement("option")
+    // option_all.value = "all"
+    // option_all.innerText = "all"
     
     const option_tv = document.createElement("option")
     option_tv.value = "tv\n\t\t\t\tshare"
@@ -31,7 +32,7 @@ console.log("Filter by type status script started.");
     option_special.value = "special"
     option_special.innerText = "special"
     
-    selector.appendChild(option_all)
+    // selector.appendChild(option_all)
     selector.appendChild(option_tv)
     selector.appendChild(option_tvshort)
     selector.appendChild(option_leftovers)
@@ -41,10 +42,9 @@ console.log("Filter by type status script started.");
     function filter_types() {
         all_items = document.querySelectorAll(".chart-view div .section.loaded")
         if (all_items == null) return
-        filter_value = selector.value;
-        console.log(filter_value)
-        let temp
-        if (filter_value == "all") {
+        filter_values = Array.from(selector.childNodes).filter(item => item.selected)
+        console.log(filter_values)
+        if (filter_values.some(item => item.value == "all") || filter_values.length == 0) {
             all_items.forEach(elem => {
                 elem.style.display = ""
             })
@@ -52,7 +52,7 @@ console.log("Filter by type status script started.");
             all_items.forEach(elem => {
                 let temp = elem.querySelector(".section-heading")
                 console.log(temp.textContent.toLowerCase());
-                if (temp.textContent.toLowerCase().indexOf(filter_value) == -1) {
+                if (filter_values.every(item => temp.textContent.toLowerCase().indexOf(item.value) == -1)) {
                     elem.style.display = "none"
                 } else {
                     elem.style.display = ""

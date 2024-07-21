@@ -6,10 +6,11 @@ console.log("Filter by watch status script started.");
 
     const selector = document.createElement("select")
     selector.id = "filter-by-watch-selector"
+    selector.toggleAttribute("multiple", true)
 
-    const option_all = document.createElement("option")
-    option_all.value = "all"
-    option_all.innerText = "all"
+    // const option_all = document.createElement("option")
+    // option_all.value = "all"
+    // option_all.innerText = "all"
 
     const option_watching = document.createElement("option")
     option_watching.value = "green"
@@ -27,7 +28,7 @@ console.log("Filter by watch status script started.");
     option_blank.value = "blank"
     option_blank.innerText = "blank"
 
-    selector.appendChild(option_all)
+    // selector.appendChild(option_all)
     selector.appendChild(option_watching)
     selector.appendChild(option_maybe)
     selector.appendChild(option_not)
@@ -36,16 +37,15 @@ console.log("Filter by watch status script started.");
     function filter_cards() {
         all_items = document.querySelectorAll("div.media-card")
         if (all_items == null) return
-        filter_value = selector.value;
-        console.log(filter_value)
-        let temp
-        if (filter_value == "all") {
+        filter_values = Array.from(selector.childNodes).filter(item => item.selected)
+        console.log(filter_values)
+        if (filter_values.some(item => item.value == "all") || filter_values.length == 0) {
             all_items.forEach((elem) => {
                 elem.style.display = ""
             })
-        } else if (filter_value == "blank") {
+        } else if (filter_values.some(item => item.value == "blank")) {
             all_items.forEach((elem) => {
-                temp = elem.querySelector(".highlighter.active")
+                let temp = elem.querySelector(".highlighter.active")
                 if (temp != null) {
                     elem.style.display = "none"
                 } else {
@@ -54,8 +54,8 @@ console.log("Filter by watch status script started.");
             })
         } else {
             all_items.forEach((elem) => {
-                temp = elem.querySelector(".highlighter")
-                if (temp != null && !temp.style.cssText.includes("color-" + filter_value)) {
+                let temp = elem.querySelector(".highlighter")
+                if (temp != null && !filter_values.some(item => temp.style.cssText.includes("color-" + item.value))) {
                     elem.style.display = "none"
                 } else {
                     elem.style.display = ""
