@@ -74,6 +74,15 @@ console.log("Filter by watch status script started.");
     }
 
     selector.addEventListener("change", filter_cards)
+    Array.from(selector.options).forEach(option => {
+        option.addEventListener("mousedown", (event) => {
+            event.preventDefault();
+            const clickedOption = event.target;
+            clickedOption.selected = !clickedOption.selected;
+            const changeEvent = new Event('change');
+            selector.dispatchEvent(changeEvent);
+        });
+    });
 
     document.body.appendChild(selector)
 

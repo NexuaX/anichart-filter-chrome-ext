@@ -64,6 +64,15 @@ console.log("Filter by type status script started.");
     }
     
     selector.addEventListener("change", filter_types)
+    Array.from(selector.options).forEach(option => {
+        option.addEventListener("mousedown", (event) => {
+            event.preventDefault();
+            const clickedOption = event.target;
+            clickedOption.selected = !clickedOption.selected;
+            const changeEvent = new Event('change');
+            selector.dispatchEvent(changeEvent);
+        });
+    });
     
     document.body.appendChild(selector)
     
