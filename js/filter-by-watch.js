@@ -28,6 +28,10 @@ console.log("Filter by watch status script started.");
     option_blank.value = "blank"
     option_blank.innerText = "blank"
 
+    let counters = [0, 0, 0, 0]
+    const counters_div = document.createElement("div")
+    counters_div.id = "status-counters"
+
     // selector.appendChild(option_all)
     selector.appendChild(option_watching)
     selector.appendChild(option_maybe)
@@ -69,6 +73,21 @@ console.log("Filter by watch status script started.");
                 list.style.gridTemplateRows = ""
             }
         })
+        counters = [0, 0, 0, 0]
+        all_items.forEach((elem) => {
+            let temp = elem.querySelector(".highlighter")
+            if (temp != null) {
+                if (temp.style.cssText.includes("color-green")) {
+                    counters[0] += 1
+                } else if (temp.style.cssText.includes("color-yellow")) {
+                    counters[1] += 1
+                } else if (temp.style.cssText.includes("color-red")) {
+                    counters[2] += 1
+                }
+            }
+        })
+        counters[3] = all_items.length - document.querySelectorAll("div.media-card .highlighter.active").length
+        counters_div.innerHTML = counters.toString()
         window.scrollBy(0, 1)
         window.scrollBy(0, -1)
     }
@@ -85,6 +104,7 @@ console.log("Filter by watch status script started.");
     });
 
     document.body.appendChild(selector)
+    document.body.appendChild(counters_div)
 
     let parent
     const config = { childList: true }

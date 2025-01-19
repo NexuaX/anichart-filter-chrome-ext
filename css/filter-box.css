@@ -31,6 +31,20 @@
     display: none;
 }
 
+#status-counters {
+    position: fixed;
+    top: calc(115px + 5px);
+    left: 5px;
+    z-index: 99;
+    font-size: 1.6rem;
+    width: 150px;
+    color: white;
+    text-align: center;
+    background-color: #2b2d42;
+    border-radius: 2px;
+    line-height: 1.5;
+}
+
 #up-scroll-arrow {
     position: fixed;
     bottom: 5px;
