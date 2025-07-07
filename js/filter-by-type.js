@@ -51,7 +51,6 @@ console.log("Filter by type status script started.");
         } else {
             all_items.forEach(elem => {
                 let temp = elem.querySelector(".section-heading")
-                console.log(temp.textContent.toLowerCase());
                 if (filter_values.every(item => temp.textContent.toLowerCase().indexOf(item.value) == -1)) {
                     elem.style.display = "none"
                 } else {
@@ -86,7 +85,7 @@ console.log("Filter by type status script started.");
     const observer = new MutationObserver(callback);
     
     let interval_id1 = setInterval(() => {
-        parent = document.querySelector("div.chart-view div")
+        parent = document.querySelector("div.chart-view div:has(> section)")
         if (parent != null) {
             clearInterval(interval_id1)
             observer.observe(parent, config)

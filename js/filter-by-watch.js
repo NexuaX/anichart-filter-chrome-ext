@@ -116,7 +116,7 @@ console.log("Filter by watch status script started.");
     const observer = new MutationObserver(callback);
 
     let interval_id1 = setInterval(() => {
-        parent = document.querySelector("div.chart-view div")
+        parent = document.querySelector("div.chart-view div:has(> section)")
         if (parent != null) {
             clearInterval(interval_id1)
             observer.observe(parent, config)
