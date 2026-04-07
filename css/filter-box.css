@@ -18,6 +18,16 @@
     width: 75px;
 }
 
+#filter-by-score-selector {
+    position: fixed;
+    top: 5px;
+    left: 155px;
+    z-index: 99;
+    font-size: 1.5rem;
+    height: 95px;
+    width: 75px;
+}
+
 #seasons-selector {
     position: fixed;
     top: calc(93px + 2px + 5px);
@@ -38,6 +48,43 @@
     z-index: 99;
     font-size: 1.6rem;
     width: 150px;
+    color: white;
+    text-align: center;
+    background-color: #2b2d42;
+    border-radius: 2px;
+    line-height: 1.5;
+}
+
+#score-counters {
+    position: fixed;
+    top: calc(115px + 5px + 20px);
+    left: 5px;
+    z-index: 99;
+    font-size: 1.6rem;
+    width: 150px;
+    color: white;
+    text-align: center;
+    background-color: #2b2d42;
+    border-radius: 2px;
+    line-height: 1.5;
+}
+
+[data-disable-card-hover] .reveal-external-links .header {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+}
+
+[data-disable-card-hover] .reveal-external-links .external-links-wrap {
+    opacity: 0 !important;
+    transform: translateX(100%) !important;
+}
+
+#disable-card-hover-container {
+    position: fixed;
+    top: calc(115px + 5px + 50px + 5px);
+    left: 5px;
+    z-index: 99;
+    font-size: 1.4rem;
     color: white;
     text-align: center;
     background-color: #2b2d42;

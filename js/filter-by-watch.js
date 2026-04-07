@@ -8,10 +8,6 @@ console.log("Filter by watch status script started.");
     selector.id = "filter-by-watch-selector"
     selector.toggleAttribute("multiple", true)
 
-    // const option_all = document.createElement("option")
-    // option_all.value = "all"
-    // option_all.innerText = "all"
-
     const option_watching = document.createElement("option")
     option_watching.value = "green"
     option_watching.innerText = "watch"
@@ -32,7 +28,6 @@ console.log("Filter by watch status script started.");
     const counters_div = document.createElement("div")
     counters_div.id = "status-counters"
 
-    // selector.appendChild(option_all)
     selector.appendChild(option_watching)
     selector.appendChild(option_maybe)
     selector.appendChild(option_not)
@@ -43,7 +38,7 @@ console.log("Filter by watch status script started.");
         if (all_items == null) return
         filter_values = Array.from(selector.childNodes).filter(item => item.selected)
         console.log(filter_values)
-        if (filter_values.some(item => item.value == "all") || filter_values.length == 0) {
+        if (filter_values.length == 0) {
             all_items.forEach((elem) => {
                 elem.style.display = ""
             })
