@@ -1,74 +1,106 @@
-console.log("Filter by watch status script started.");
+console.log("filter by watch status module loaded.");
 
-(function() {
-    
-    let all_items
+class FilterByWatch {
+    constructor() {
+        this.name = "filter-by-watch"
+        this.selector = null
+        this.counters_div = null
+        this.initialized = false
+        this.active_filters = new Set()
+    }
 
-    const selector = document.createElement("select")
-    selector.id = "filter-by-watch-selector"
-    selector.toggleAttribute("multiple", true)
-
-    const option_watching = document.createElement("option")
-    option_watching.value = "green"
-    option_watching.innerText = "watch"
-
-    const option_maybe = document.createElement("option")
-    option_maybe.value = "yellow"
-    option_maybe.innerText = "maybe"
-
-    const option_not = document.createElement("option")
-    option_not.value = "red"
-    option_not.innerText = "not"
-
-    const option_blank = document.createElement("option")
-    option_blank.value = "blank"
-    option_blank.innerText = "blank"
-
-    let counters = [0, 0, 0, 0]
-    const counters_div = document.createElement("div")
-    counters_div.id = "status-counters"
-
-    selector.appendChild(option_watching)
-    selector.appendChild(option_maybe)
-    selector.appendChild(option_not)
-    selector.appendChild(option_blank)
-
-    function filter_cards() {
-        all_items = document.querySelectorAll("div.media-card")
-        if (all_items == null) return
-        filter_values = Array.from(selector.childNodes).filter(item => item.selected)
-        console.log(filter_values)
-        if (filter_values.length == 0) {
-            all_items.forEach((elem) => {
-                elem.style.display = ""
-            })
-        } else if (filter_values.some(item => item.value == "blank")) {
-            all_items.forEach((elem) => {
-                let temp = elem.querySelector(".highlighter.active")
-                if (temp != null) {
-                    elem.style.display = "none"
-                } else {
-                    elem.style.display = ""
-                }
-            })
-        } else {
-            all_items.forEach((elem) => {
-                let temp = elem.querySelector(".highlighter")
-                if (temp != null && !filter_values.some(item => temp.style.cssText.includes("color-" + item.value))) {
-                    elem.style.display = "none"
-                } else {
-                    elem.style.display = ""
-                }
-            })
+    initialize() {
+        if (this.initialized) {
+            console.warn(`${this.name} is already initialized.`)
+            return
         }
-        document.querySelectorAll(".card-list").forEach((list) => {
-            if (Array.from(list.childNodes).every(elem => elem.style.display == "none")) {
-                list.style.gridTemplateRows = "unset"
-            } else {
-                list.style.gridTemplateRows = ""
+
+        this.selector = document.createElement("select")
+        this.selector.id = "filter-by-watch-selector"
+        this.selector.toggleAttribute("multiple", true)
+
+        const option_watching = document.createElement("option")
+        option_watching.value = "green"
+        option_watching.innerText = "watch"
+
+        const option_maybe = document.createElement("option")
+        option_maybe.value = "yellow"
+        option_maybe.innerText = "maybe"
+
+        const option_not = document.createElement("option")
+        option_not.value = "red"
+        option_not.innerText = "not"
+
+        const option_blank = document.createElement("option")
+        option_blank.value = "blank"
+        option_blank.innerText = "blank"
+
+        this.selector.appendChild(option_watching)
+        this.selector.appendChild(option_maybe)
+        this.selector.appendChild(option_not)
+        this.selector.appendChild(option_blank)
+
+        this.selector.addEventListener("change", () => document.dispatchEvent(new CustomEvent('filter-value-changed')))
+
+        Array.from(this.selector.options).forEach(option => {
+            option.addEventListener("mousedown", (event) => {
+                event.preventDefault();
+                const clickedOption = event.target;
+                clickedOption.selected = !clickedOption.selected;
+                if (clickedOption.selected) {
+                    this.active_filters.add(clickedOption.value)
+                } else {
+                    this.active_filters.delete(clickedOption.value)
+                }
+                this.selector.dispatchEvent(new Event('change'));
+            });
+        });
+
+        document.body.appendChild(this.selector)
+
+        this.counters_div = document.createElement("div")
+        this.counters_div.id = "status-counters"
+
+        document.body.appendChild(this.counters_div)
+
+        this.initialized = true
+        console.log(`${this.name} initialized.`)
+    }
+
+    filter_card(card) {
+        let filter_out = false
+
+        if (this.active_filters.size == 0) {
+            return filter_out
+        }
+
+        if (this.active_filters.has("blank")) {
+            let temp = card.querySelector(".highlighter.active")
+            if (temp != null) {
+                filter_out = true
             }
-        })
-        counters = [0, 0, 0, 0]
+            return filter_out
+        }
+
+        let temp = card.querySelector(".highlighter")
+        if (temp == null) {
+            return filter_out
+        }
+
+        filter_out = true
+        for (const filter of this.active_filters) {
+            if (temp.style.cssText.includes(`color-${filter}`)) {
+                filter_out = false
+                break
+            }
+        }
+
+        return filter_out
+    }
+
+    update_counters(all_items) {
+        let counters = [0, 0, 0, 0]
+
         all_items.forEach((elem) => {
             let temp = elem.querySelector(".highlighter")
             if (temp != null) {
@@ -81,41 +113,8 @@ console.log("Filter by watch status script started.");
                 }
             }
         })
+
         counters[3] = all_items.length - document.querySelectorAll("div.media-card .highlighter.active").length
-        counters_div.innerHTML = counters.toString()
-        window.scrollBy(0, 1)
-        window.scrollBy(0, -1)
+        this.counters_div.innerHTML = counters.toString()
     }
-
-    selector.addEventListener("change", filter_cards)
-    Array.from(selector.options).forEach(option => {
-        option.addEventListener("mousedown", (event) => {
-            event.preventDefault();
-            const clickedOption = event.target;
-            clickedOption.selected = !clickedOption.selected;
-            const changeEvent = new Event('change');
-            selector.dispatchEvent(changeEvent);
-        });
-    });
-
-    document.body.appendChild(selector)
-    document.body.appendChild(counters_div)
-
-    let parent
-    const config = { childList: true }
-
-    const callback = (mutationList, observer) => {
-        setTimeout(filter_cards, 250)
-    }
-
-    const observer = new MutationObserver(callback);
-
-    let interval_id1 = setInterval(() => {
-        parent = document.querySelector("div.chart-view div:has(> section)")
-        if (parent != null) {
-            clearInterval(interval_id1)
-            observer.observe(parent, config)
-        }
-    })
-
-})();
+}

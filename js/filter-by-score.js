@@ -1,85 +1,109 @@
-console.log("filter by score script started.");
+console.log("filter by score module loaded.");
 
-(function() {
+class FilterByScore {
+    constructor() {
+        this.name = "filter-by-score"
+        this.selector = null
+        this.counters_div = null
+        this.initialized = false
+        this.active_filters = new Set()
+    }
 
-    let all_items
-
-    const selector = document.createElement("select")
-    selector.id = "filter-by-score-selector"
-    selector.toggleAttribute("multiple", true)
-
-    const option_very_good = document.createElement("option")
-    option_very_good.value = "great"
-    option_very_good.innerText = "great"
-
-    const option_good = document.createElement("option")
-    option_good.value = "good"
-    option_good.innerText = "good"
-
-    const option_average = document.createElement("option")
-    option_average.value = "average"
-    option_average.innerText = "average"
-
-    const option_bad = document.createElement("option")
-    option_bad.value = "bad"
-    option_bad.innerText = "bad"
-
-    const option_no_score = document.createElement("option")
-    option_no_score.value = "no-score"
-    option_no_score.innerText = "no score"
-
-    let counters = [0, 0, 0, 0]
-    const counters_div = document.createElement("div")
-    counters_div.id = "score-counters"
-
-    selector.appendChild(option_very_good)
-    selector.appendChild(option_good)
-    selector.appendChild(option_average)
-    selector.appendChild(option_bad)
-    selector.appendChild(option_no_score)
-
-    function filter_cards() {
-        all_items = document.querySelectorAll("div.media-card")
-        if (all_items == null) return
-        filter_values = Array.from(selector.childNodes).filter(item => item.selected).map(item => item.value)
-        console.log(filter_values)
-        if (filter_values.length == 0) {
-            all_items.forEach((elem) => {
-                elem.style.display = ""
-            })
-        } else {
-            all_items.forEach((elem) => {
-                let temp = elem.querySelector(".icon-stat .stat")
-                let score = 0
-                if (temp != null && temp.textContent.trim().includes("%")) {
-                    score = parseInt(temp.textContent.trim().slice(0, -1))
-                }
-                elem.style.display = "none"
-                if (filter_values.includes("great") && score >= 80 && score <= 100) {
-                    elem.style.display = ""
-                }
-                if (filter_values.includes("good") && score >= 70 && score < 80) {
-                    elem.style.display = ""
-                } 
-                if (filter_values.includes("average") && score >= 60 && score < 70) {
-                    elem.style.display = ""
-                }
-                if (filter_values.includes("bad") && score < 60 && score > 0) {
-                    elem.style.display = ""
-                }
-                if (filter_values.includes("no-score") && (temp == null || !temp.textContent.trim().includes("%"))) {
-                    elem.style.display = ""
-                }
-            })
+    initialize() {
+        if (this.initialized) {
+            console.warn(`${this.name} is already initialized.`)
+            return
         }
-        document.querySelectorAll(".card-list").forEach((list) => {
-            if (Array.from(list.childNodes).every(elem => elem.style.display == "none")) {
-                list.style.gridTemplateRows = "unset"
-            } else {
-                list.style.gridTemplateRows = ""
-            }
-        })
-        counters = [0, 0, 0, 0, 0]
+
+        this.selector = document.createElement("select")
+        this.selector.id = "filter-by-score-selector"
+        this.selector.toggleAttribute("multiple", true)
+
+        const option_very_good = document.createElement("option")
+        option_very_good.value = "great"
+        option_very_good.innerText = "great"
+
+        const option_good = document.createElement("option")
+        option_good.value = "good"
+        option_good.innerText = "good"
+
+        const option_average = document.createElement("option")
+        option_average.value = "average"
+        option_average.innerText = "average"
+
+        const option_bad = document.createElement("option")
+        option_bad.value = "bad"
+        option_bad.innerText = "bad"
+
+        const option_no_score = document.createElement("option")
+        option_no_score.value = "no-score"
+        option_no_score.innerText = "no score"
+
+        this.selector.appendChild(option_very_good)
+        this.selector.appendChild(option_good)
+        this.selector.appendChild(option_average)
+        this.selector.appendChild(option_bad)
+        this.selector.appendChild(option_no_score)
+
+        this.selector.addEventListener("change", () => document.dispatchEvent(new CustomEvent('filter-value-changed')))
+
+        Array.from(this.selector.options).forEach(option => {
+            option.addEventListener("mousedown", (event) => {
+                event.preventDefault()
+                const clickedOption = event.target
+                clickedOption.selected = !clickedOption.selected
+                if (clickedOption.selected) {
+                    this.active_filters.add(clickedOption.value)
+                } else {
+                    this.active_filters.delete(clickedOption.value)
+                }
+                this.selector.dispatchEvent(new Event('change'))
+            });
+        });
+
+        document.body.appendChild(this.selector)
+
+        this.counters_div = document.createElement("div")
+        this.counters_div.id = "score-counters"
+
+        document.body.appendChild(this.counters_div)
+
+        this.initialized = true
+        console.log(`${this.name} initialized.`)
+    }
+
+    filter_card(card) {
+        let filter_out = false
+
+        if (this.active_filters.size == 0) {
+            return filter_out
+        }
+
+        const temp = card.querySelector(".icon-stat .stat")
+        let score = 0
+        if (temp != null && temp.textContent.trim().includes("%")) {
+            score = parseInt(temp.textContent.trim().slice(0, -1))
+        }
+        
+        filter_out = true
+        if (this.active_filters.has("great") && score >= 80 && score <= 100) {
+            filter_out = false
+        } else if (this.active_filters.has("good") && score >= 70 && score < 80) {
+            filter_out = false
+        } else if (this.active_filters.has("average") && score >= 60 && score < 70) {
+            filter_out = false
+        } else if (this.active_filters.has("bad") && score < 60 && score > 0) {
+            filter_out = false
+        } else if (this.active_filters.has("no-score") && score == 0) {
+            filter_out = false
+        }
+    
+        return filter_out  
+    }
+
+    update_counters(all_items) {
+        let counters = [0, 0, 0, 0, 0]
+
         all_items.forEach((elem) => {
             let temp = elem.querySelector(".icon-stat .stat")
             let score = 0
@@ -98,39 +122,7 @@ console.log("filter by score script started.");
                 counters[4] += 1
             }
         })
-        counters_div.innerText = counters.toString()
-        window.scrollBy(0, 1)
-        window.scrollBy(0, -1)
+
+        this.counters_div.innerText = counters.toString()
     }
-
-    selector.addEventListener("change", filter_cards)
-    Array.from(selector.options).forEach(option => {
-        option.addEventListener("mousedown", (event) => {
-            event.preventDefault();
-            const clickedOption = event.target;
-            clickedOption.selected = !clickedOption.selected;
-            const changeEvent = new Event('change');
-            selector.dispatchEvent(changeEvent);
-        });
-    });
-
-    document.body.appendChild(selector)
-    document.body.appendChild(counters_div)
-
-    let parent
-    const config = { childList: true }
-
-    const callback = (mutationList, observer) => {
-        setTimeout(filter_cards, 250)
-    }
-
-    const observer = new MutationObserver(callback);
-
-    let interval_id1 = setInterval(() => {
-        parent = document.querySelector("div.chart-view div:has(> section)")
-        if (parent != null) {
-            clearInterval(interval_id1)
-            observer.observe(parent, config)
-        }
-    })
-})()
+}
