@@ -44,6 +44,10 @@ console.log("filters.js loaded");
                 filter.update_counters(all_items)
             }
         })
+
+        // do a little scroll to trigger lazy loading of images and further cards
+        window.scrollBy(0, 1)
+        window.scrollBy(0, -1)
     }
 
     document.addEventListener("filter-value-changed", filter_cards)

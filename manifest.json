@@ -10,7 +10,15 @@
         {
             "matches": ["https://anichart.net/*"],
             "run_at": "document_idle",
-            "js": ["js/filter-by-score.js", "js/filter-by-watch.js", "js/card-filters.js", "js/filter-by-type.js", "js/switch-seasons.js", "js/up-arrow.js", "js/disable-card-hover.js"],
+            "js": [
+                "js/filter-by-score.js",
+                "js/filter-by-watch.js",
+                "js/card-filters.js",
+                "js/filter-by-type.js",
+                "js/switch-seasons.js",
+                "js/up-arrow.js",
+                "js/disable-card-hover.js"
+            ],
             "css": ["css/filter-box.css"]
         }
     ]
